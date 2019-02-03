@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Library.API.Entity;
+using Library.API.Helper;
 using Library.API.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 namespace Library.API
 {
@@ -26,7 +28,14 @@ namespace Library.API
         }
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc().AddMvcOptions(opt => {
+                //return supported formats when unspported formats requested
+                opt.ReturnHttpNotAcceptable = true;
+                //accept xml output
+                opt.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
+                //accept xml input
+                opt.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
+            });
             services.AddDbContext<LibraryDbContext>(o=>o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<ILibraryRepository, LibraryRepository>();
         }
@@ -40,9 +49,24 @@ namespace Library.API
             }
             else
             {
-                app.UseExceptionHandler();
+                app.UseExceptionHandler(appBuilder => {
+                appBuilder.Run(async con =>{
+                    con.Response.StatusCode = 500;
+                    await con.Response.WriteAsync("Unexpexcted fault heppend, please try again later.");
+                });
+                });
             }
             context.EnsureSeedDataForContext();
+            AutoMapper.Mapper.Initialize(config =>
+            {
+                config.CreateMap<Entity.Author, Models.AuthorVM>()
+                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
+                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.GetCurrentAge()));
+
+                config.CreateMap<Entity.Book, Models.BookVM>();
+                config.CreateMap<Models.CreateAuthorVM, Entity.Author>();
+                config.CreateMap<Models.CreateBookVM, Entity.Book>();
+            });
             app.UseMvc();
             //app.Run(async (context) =>
             //{

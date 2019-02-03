@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Library.API.Entity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Library.API.Services
 {
@@ -15,7 +16,17 @@ namespace Library.API.Services
         }
         public void AddAuthor(Author author)
         {
+            author.Id = Guid.NewGuid();
             context.Authors.Add(author);
+
+            // the repository fills the id (instead of using identity columns)
+            if (author.Books.Any())
+            {
+                foreach (var book in author.Books)
+                {
+                    book.Id = Guid.NewGuid();
+                }
+            }
         }
 
         public void AddBookForAuthor(Guid authorId, Book book)
