@@ -16,7 +16,10 @@ namespace Library.API.Services
         }
         public void AddAuthor(Author author)
         {
-            author.Id = Guid.NewGuid();
+           if(author.Id == Guid.Empty)
+                {
+                author.Id = Guid.NewGuid();
+            }
             context.Authors.Add(author);
 
             // the repository fills the id (instead of using identity columns)

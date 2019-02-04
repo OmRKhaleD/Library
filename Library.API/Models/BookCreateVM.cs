@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Library.API.Models
 {
-    public class CreateBookVM
+    public class BookCreateVM
     {
         public string Title { get; set; }
         public string Description { get; set; }

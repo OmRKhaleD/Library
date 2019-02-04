@@ -64,8 +64,13 @@ namespace Library.API
                 .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.GetCurrentAge()));
 
                 config.CreateMap<Entity.Book, Models.BookVM>();
-                config.CreateMap<Models.CreateAuthorVM, Entity.Author>();
-                config.CreateMap<Models.CreateBookVM, Entity.Book>();
+                config.CreateMap<Models.AuthorCreateVM, Entity.Author>();
+                config.CreateMap<Models.BookCreateVM, Entity.Book>();
+                config.CreateMap<Models.BookUpdateVM, Entity.Book>();
+                config.CreateMap<Entity.Book, Models.BookUpdateVM>();
+                config.CreateMap<Models.AuthorUpdateVM, Entity.Author>();
+                config.CreateMap<Entity.Author, Models.AuthorUpdateVM>();
+
             });
             app.UseMvc();
             //app.Run(async (context) =>

@@ -1,0 +1,550 @@
+{
+	"info": {
+		"_postman_id": "b1b4a4dc-9a8e-47ae-83cd-3a5852f2ef98",
+		"name": "RESTful API ASP.NET Core - module 4",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "PUT Book for Author",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"A Game of Thrones - Updated\",\n  \"description\": \"Description - Updated\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe/books/447eb762-95e9-4c31-95e1-b20053fbe215",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe",
+						"books",
+						"447eb762-95e9-4c31-95e1-b20053fbe215"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Book for Author (with ids)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"A Game of Thrones - Test with both ids\",\n  \"description\": \"Description - Test with both ids\",\n  \"id\": \"e57b605f-8b3c-4089-b672-6ce9e6d6c23f\",\n  \"authorId\": \"f74d6899-9ed2-4137-9876-66b070553f8f\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe/books/447eb762-95e9-4c31-95e1-b20053fbe215",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe",
+						"books",
+						"447eb762-95e9-4c31-95e1-b20053fbe215"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Book for Author (no description)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"A Game of Thrones - Updated\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe/books/447eb762-95e9-4c31-95e1-b20053fbe215",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe",
+						"books",
+						"447eb762-95e9-4c31-95e1-b20053fbe215"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Book for Author (unexisting author)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"The Winds of Winter\",\n  \"description\": \"Forthcoming 6th novel in A Song of Ice and Fire.\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/62e81210-2d6b-4213-9621-ec2f321c1651/books/bc4c35c3-3857-4250-9449-155fcf5109ec",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"62e81210-2d6b-4213-9621-ec2f321c1651",
+						"books",
+						"bc4c35c3-3857-4250-9449-155fcf5109ec"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Book for Author (unexisting book)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"The Winds of Winter\",\n  \"description\": \"Forthcoming 6th novel in A Song of Ice and Fire.\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe/books/75bf303e-6dc4-4b00-81fd-f896a6379f5f",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe",
+						"books",
+						"75bf303e-6dc4-4b00-81fd-f896a6379f5f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Author",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\n    \t\"firstName\" : \"George RR\",\n\t\"lastName\" : \"Martin\",\n\t\"dateOfBirth\" : \"1948-03-04T00:00:00\",\n\t\"genre\": \"Fantasy\"\n    }"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Author (unexisting author)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\n    \t\"firstName\" : \"Omar\",\n\t\"lastName\" : \"Asd\",\n\t\"dateOfBirth\" : \"1948-03-04T00:00:00\",\n\t\"genre\": \"Fantasy\"\n    }"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/62e81210-2d6b-4213-9621-ec2f321c1651",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"62e81210-2d6b-4213-9621-ec2f321c1651"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH Book for Author",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json-patch+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n      \"op\": \"replace\",\n      \"path\": \"/title\",\n      \"value\": \"A Game of Thrones - Updated\"\n    }\n]"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe/books/447eb762-95e9-4c31-95e1-b20053fbe215",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe",
+						"books",
+						"447eb762-95e9-4c31-95e1-b20053fbe215"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH Book for Author (multiple)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json-patch+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n      \"op\": \"replace\",\n      \"path\": \"/title\",\n      \"value\": \"A Game of Thrones - Updated again\"\n    },\n    {\n      \"op\": \"replace\",\n      \"path\": \"/description\",\n      \"value\": \"Description - Updated\"\n    }\n]"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe/books/447eb762-95e9-4c31-95e1-b20053fbe215",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe",
+						"books",
+						"447eb762-95e9-4c31-95e1-b20053fbe215"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH Book for Author (remove)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json-patch+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n      \"op\": \"remove\",\n      \"path\": \"/description\"\n    }\n]"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe/books/447eb762-95e9-4c31-95e1-b20053fbe215",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe",
+						"books",
+						"447eb762-95e9-4c31-95e1-b20053fbe215"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH Book for Author (copy and add)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json-patch+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n      \"op\": \"add\",\n      \"path\": \"/description\",\n      \"value\": \"new description\"\n    },\n    {\n      \"op\": \"copy\",\n      \"from\": \"/description\",\n      \"path\": \"/title\"\n    }\n]"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe/books/447eb762-95e9-4c31-95e1-b20053fbe215",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe",
+						"books",
+						"447eb762-95e9-4c31-95e1-b20053fbe215"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH Book for Author (unexisting author)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json-patch+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n      \"op\": \"replace\",\n      \"path\": \"/title\",\n      \"value\": \"A Game of Thrones - Updated\"\n    }\n]"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/62e81210-2d6b-4213-9621-ec2f321c1651/books/447eb762-95e9-4c31-95e1-b20053fbe215",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"62e81210-2d6b-4213-9621-ec2f321c1651",
+						"books",
+						"447eb762-95e9-4c31-95e1-b20053fbe215"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH Book for Author (unexisting book)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json-patch+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n      \"op\": \"replace\",\n      \"path\": \"/title\",\n      \"value\": \"The Winds of Winter\"\n    },\n    {\n      \"op\": \"replace\",\n      \"path\": \"/description\",\n      \"value\": \"Description of The Winds of Winter\"\n    }\n]"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe/books/75bf303e-6dc4-4b00-81fd-f896a6379f5f",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe",
+						"books",
+						"75bf303e-6dc4-4b00-81fd-f896a6379f5f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH Author (unexisting author)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json-patch+json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n      \"op\": \"replace\",\n      \"path\": \"/firstName\",\n      \"value\": \"asd\"\n    },\n    {\n      \"op\": \"replace\",\n      \"path\": \"/lastName\",\n      \"value\": \"123\"\n    },\n    {\n      \"op\": \"replace\",\n      \"path\": \"/genre\",\n      \"value\": \"comdy\"\n    },\n    {\n      \"op\": \"replace\",\n      \"path\": \"/dateOfBirth\",\n      \"value\": \"1948-03-04T00:00:00\"\n    }\n]"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/62e81210-2d6b-4213-9621-ec2f321c1651",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"62e81210-2d6b-4213-9621-ec2f321c1651"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH Author",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json-patch+json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n      \"op\": \"replace\",\n      \"path\": \"/firstName\",\n      \"value\": \"asd\"\n    }\n]"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

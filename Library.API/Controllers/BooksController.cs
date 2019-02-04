@@ -2,6 +2,7 @@
 using Library.API.Entity;
 using Library.API.Models;
 using Library.API.Services;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -39,7 +40,7 @@ namespace Library.API.Controllers
             return Ok(bookVM);
         }
         [HttpPost]
-        public IActionResult CreateBook(Guid authorId,[FromBody] CreateBookVM bookVM)
+        public IActionResult CreateBook(Guid authorId,[FromBody] BookCreateVM bookVM)
         {
             if (bookVM == null)
                 return BadRequest();
@@ -63,6 +64,60 @@ namespace Library.API.Controllers
             libraryRepository.DeleteBook(book);
             if (!libraryRepository.Save())
                 throw new Exception($"Delete book {id} for author {authorId} failed on server");
+            return NoContent();
+        }
+        [HttpPut("{id}")]//HttpPut full update 
+        public IActionResult fullyUpdateAuthorBook(Guid authorId, Guid id,[FromBody] BookUpdateVM bookVM)
+        {
+            if (bookVM == null)
+                return BadRequest();
+            if (!libraryRepository.AuthorExists(authorId))
+                return NotFound();
+            var book = libraryRepository.GetBookForAuthor(authorId, id);
+            if (book == null)
+            {
+                //Upserting: using HttpPut to insert
+                var bookAdd = Mapper.Map<Book>(bookVM);
+                bookAdd.Id = id;
+                libraryRepository.AddBookForAuthor(authorId, bookAdd);
+                if (!libraryRepository.Save())
+                    throw new Exception($"Createing book for {authorId} failed to save");
+                var createdbook = Mapper.Map<BookVM>(bookAdd);
+                return CreatedAtRoute("GetBook", new { authorId = authorId, id = createdbook.Id }, createdbook);
+            }
+            Mapper.Map(bookVM, book);
+            libraryRepository.UpdateBookForAuthor(book);
+            if (!libraryRepository.Save())
+                throw new Exception($"Update book {id} for author {authorId} failed on server");
+            return NoContent();
+        }
+        [HttpPatch("{id}")]
+        public IActionResult PartiallyUpdateAuthorBook(Guid authorId,Guid id,[FromBody]JsonPatchDocument<BookUpdateVM> bookPatch)
+        {
+            if (bookPatch == null)
+                return BadRequest();
+            if (!libraryRepository.AuthorExists(authorId))
+                return NotFound();
+            var book = libraryRepository.GetBookForAuthor(authorId, id);
+            if (book == null)
+            {
+                //Upserting: using HttpPatch to insert
+                var newBookVM = new BookUpdateVM();
+                bookPatch.ApplyTo(newBookVM);
+                var bookAdd = Mapper.Map<Book>(newBookVM);
+                bookAdd.Id = id;
+                libraryRepository.AddBookForAuthor(authorId, bookAdd);
+                if (!libraryRepository.Save())
+                    throw new Exception($"Createing book for {authorId} failed to save");
+                var createdbook = Mapper.Map<BookVM>(bookAdd);
+                return CreatedAtRoute("GetBook", new { authorId = authorId, id = createdbook.Id }, createdbook);
+            }
+            var bookVM = Mapper.Map<BookUpdateVM>(book);
+            bookPatch.ApplyTo(bookVM);
+            Mapper.Map(bookVM, book);
+            libraryRepository.UpdateBookForAuthor(book);
+            if (!libraryRepository.Save())
+                throw new Exception($"Update book {id} for author {authorId} failed on server");
             return NoContent();
         }
     }
