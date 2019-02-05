@@ -1,13 +1,14 @@
 ﻿using AutoMapper;
 using Library.API.Entity;
+using Library.API.Helper;
 using Library.API.Models;
 using Library.API.Services;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Library.API.Controllers
 {
@@ -15,9 +16,11 @@ namespace Library.API.Controllers
     public class BooksController : Controller
     {
         ILibraryRepository libraryRepository;
-        public BooksController(ILibraryRepository LibraryRepository)
+        ILogger<BooksController> logger;
+        public BooksController(ILibraryRepository LibraryRepository,ILogger<BooksController> Logger)
         {
             libraryRepository = LibraryRepository;
+            logger = Logger;
         }
         [HttpGet()]
         public IActionResult GetAuthorBooks(Guid authorId)
@@ -44,6 +47,10 @@ namespace Library.API.Controllers
         {
             if (bookVM == null)
                 return BadRequest();
+            if (bookVM.Title == bookVM.Description)
+                ModelState.AddModelError(nameof(BookCreateVM), "title and description can not be the same.");
+            if (!ModelState.IsValid)
+                return new UnprocessableEntityObject(ModelState);
             if (!libraryRepository.AuthorExists(authorId))
                 return NotFound();
             var book = Mapper.Map<Book>(bookVM);
@@ -64,13 +71,18 @@ namespace Library.API.Controllers
             libraryRepository.DeleteBook(book);
             if (!libraryRepository.Save())
                 throw new Exception($"Delete book {id} for author {authorId} failed on server");
+            logger.LogInformation(100, $"Book {id} for Author {authorId} was deleted");
             return NoContent();
         }
         [HttpPut("{id}")]//HttpPut full update 
-        public IActionResult fullyUpdateAuthorBook(Guid authorId, Guid id,[FromBody] BookUpdateVM bookVM)
+        public IActionResult FullyUpdateAuthorBook(Guid authorId, Guid id,[FromBody] BookUpdateVM bookVM)
         {
             if (bookVM == null)
                 return BadRequest();
+            if (bookVM.Title == bookVM.Description)
+                ModelState.AddModelError(nameof(BookUpdateVM), "title and description can not be the same.");
+            if (!ModelState.IsValid)
+                return new UnprocessableEntityObject(ModelState);
             if (!libraryRepository.AuthorExists(authorId))
                 return NotFound();
             var book = libraryRepository.GetBookForAuthor(authorId, id);
@@ -103,7 +115,12 @@ namespace Library.API.Controllers
             {
                 //Upserting: using HttpPatch to insert
                 var newBookVM = new BookUpdateVM();
-                bookPatch.ApplyTo(newBookVM);
+                bookPatch.ApplyTo(newBookVM, ModelState);
+                if (newBookVM.Title == newBookVM.Description)
+                    ModelState.AddModelError(nameof(BookUpdateVM), "title and description can not be the same.");
+                TryValidateModel(newBookVM);
+                if (!ModelState.IsValid)
+                    return new UnprocessableEntityObject(ModelState);
                 var bookAdd = Mapper.Map<Book>(newBookVM);
                 bookAdd.Id = id;
                 libraryRepository.AddBookForAuthor(authorId, bookAdd);
@@ -113,7 +130,12 @@ namespace Library.API.Controllers
                 return CreatedAtRoute("GetBook", new { authorId = authorId, id = createdbook.Id }, createdbook);
             }
             var bookVM = Mapper.Map<BookUpdateVM>(book);
-            bookPatch.ApplyTo(bookVM);
+            bookPatch.ApplyTo(bookVM, ModelState);
+            if (bookVM.Title == bookVM.Description)
+                ModelState.AddModelError(nameof(BookUpdateVM), "title and description can not be the same.");
+            TryValidateModel(bookVM);
+            if (!ModelState.IsValid)
+                return new UnprocessableEntityObject(ModelState);
             Mapper.Map(bookVM, book);
             libraryRepository.UpdateBookForAuthor(book);
             if (!libraryRepository.Save())

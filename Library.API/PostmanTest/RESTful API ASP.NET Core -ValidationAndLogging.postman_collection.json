@@ -1,0 +1,651 @@
+{
+	"info": {
+		"_postman_id": "ceb18117-95c0-404b-b83e-c5b543ce3419",
+		"name": "RESTful API ASP.NET Core - module 5",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "POST Book for Author (null values)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\" : null,\n\t\"description\" : null\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/f74d6899-9ed2-4137-9876-66b070553f8f/books",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"f74d6899-9ed2-4137-9876-66b070553f8f",
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Book for Author (invalid values)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"title\" : null,\n\t\"description\" : \"Capstan gibbet poop deck smartly knave snow crow's nest tack Corsair doubloon. Dead men tell no tales Barbary Coast coxswain Arr gunwalls walk the plank tackle Gold Road yo-ho-ho lugger. Clipper lass sloop crack Jennys tea cup boatswain Pirate Round fire in the hole yard Gold Road weigh anchor. Draft measured fer yer chains boatswain fore lugsail heave down salmagundi pillage careen keel. Smartly warp run a rig grog dead men tell no tales lanyard loot bilge water coffer pink. Red ensign square-rigged ahoy gunwalls quarter knave doubloon handsomely shrouds reef sails. Belay brigantine galleon rigging nipper wherry lee parrel loaded to the gunwalls carouser. Jack Tar rope's end lee Corsair schooner barkadeer chantey rigging jack cable. No prey, no pay lee Chain Shot ye code of conduct tender Jack Tar topgallant piracy black jack. Hearties measured fer yer chains bowsprit port starboard Pieces of Eight Pirate Round pressgang black jack brig. Crimp salmagundi Brethren of the Coast poop deck coxswain quarterdeck black spot hogshead reef sails Yellow Jack. Brigantine piracy league Privateer run a shot across the bow rum lass Pirate Round Davy Jones' Locker ho. Arr yardarm walk the plank long boat hardtack gangplank bring a spring upon her cable scallywag port mizzen. Ahoy lateen sail Corsair gangplank careen warp rigging chase nipper gaff. Scallywag rutters plunder hail-shot fluke draught yo-ho-ho long clothes maroon reef sails.\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/f74d6899-9ed2-4137-9876-66b070553f8f/books",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"f74d6899-9ed2-4137-9876-66b070553f8f",
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Book for Author (title == description)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\" : \"A new book\",\n  \"description\" : \"A new book\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/f74d6899-9ed2-4137-9876-66b070553f8f/books",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"f74d6899-9ed2-4137-9876-66b070553f8f",
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Book for Author (long title == long description)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\" : \"Capstan gibbet poop deck smartly knave snow crow's nest tack Corsair doubloon. Dead men tell no tales Barbary Coast coxswain Arr gunwalls walk the plank tackle Gold Road yo-ho-ho lugger. Clipper lass sloop crack Jennys tea cup boatswain Pirate Round fire in the hole yard Gold Road weigh anchor. Draft measured fer yer chains boatswain fore lugsail heave down salmagundi pillage careen keel. Smartly warp run a rig grog dead men tell no tales lanyard loot bilge water coffer pink. Red ensign square-rigged ahoy gunwalls quarter knave doubloon handsomely shrouds reef sails. Belay brigantine galleon rigging nipper wherry lee parrel loaded to the gunwalls carouser. Jack Tar rope's end lee Corsair schooner barkadeer chantey rigging jack cable. No prey, no pay lee Chain Shot ye code of conduct tender Jack Tar topgallant piracy black jack. Hearties measured fer yer chains bowsprit port starboard Pieces of Eight Pirate Round pressgang black jack brig. Crimp salmagundi Brethren of the Coast poop deck coxswain quarterdeck black spot hogshead reef sails Yellow Jack. Brigantine piracy league Privateer run a shot across the bow rum lass Pirate Round Davy Jones' Locker ho. Arr yardarm walk the plank long boat hardtack gangplank bring a spring upon her cable scallywag port mizzen. Ahoy lateen sail Corsair gangplank careen warp rigging chase nipper gaff. Scallywag rutters plunder hail-shot fluke draught yo-ho-ho long clothes maroon reef sails.\",\n  \"description\" : \"Capstan gibbet poop deck smartly knave snow crow's nest tack Corsair doubloon. Dead men tell no tales Barbary Coast coxswain Arr gunwalls walk the plank tackle Gold Road yo-ho-ho lugger. Clipper lass sloop crack Jennys tea cup boatswain Pirate Round fire in the hole yard Gold Road weigh anchor. Draft measured fer yer chains boatswain fore lugsail heave down salmagundi pillage careen keel. Smartly warp run a rig grog dead men tell no tales lanyard loot bilge water coffer pink. Red ensign square-rigged ahoy gunwalls quarter knave doubloon handsomely shrouds reef sails. Belay brigantine galleon rigging nipper wherry lee parrel loaded to the gunwalls carouser. Jack Tar rope's end lee Corsair schooner barkadeer chantey rigging jack cable. No prey, no pay lee Chain Shot ye code of conduct tender Jack Tar topgallant piracy black jack. Hearties measured fer yer chains bowsprit port starboard Pieces of Eight Pirate Round pressgang black jack brig. Crimp salmagundi Brethren of the Coast poop deck coxswain quarterdeck black spot hogshead reef sails Yellow Jack. Brigantine piracy league Privateer run a shot across the bow rum lass Pirate Round Davy Jones' Locker ho. Arr yardarm walk the plank long boat hardtack gangplank bring a spring upon her cable scallywag port mizzen. Ahoy lateen sail Corsair gangplank careen warp rigging chase nipper gaff. Scallywag rutters plunder hail-shot fluke draught yo-ho-ho long clothes maroon reef sails.\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/f74d6899-9ed2-4137-9876-66b070553f8f/books",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"f74d6899-9ed2-4137-9876-66b070553f8f",
+						"books"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Book for Author (invalid values)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": null,\n  \"description\": \"Capstan gibbet poop deck smartly knave snow crow's nest tack Corsair doubloon. Dead men tell no tales Barbary Coast coxswain Arr gunwalls walk the plank tackle Gold Road yo-ho-ho lugger. Clipper lass sloop crack Jennys tea cup boatswain Pirate Round fire in the hole yard Gold Road weigh anchor. Draft measured fer yer chains boatswain fore lugsail heave down salmagundi pillage careen keel. Smartly warp run a rig grog dead men tell no tales lanyard loot bilge water coffer pink. Red ensign square-rigged ahoy gunwalls quarter knave doubloon handsomely shrouds reef sails. Belay brigantine galleon rigging nipper wherry lee parrel loaded to the gunwalls carouser. Jack Tar rope's end lee Corsair schooner barkadeer chantey rigging jack cable. No prey, no pay lee Chain Shot ye code of conduct tender Jack Tar topgallant piracy black jack. Hearties measured fer yer chains bowsprit port starboard Pieces of Eight Pirate Round pressgang black jack brig. Crimp salmagundi Brethren of the Coast poop deck coxswain quarterdeck black spot hogshead reef sails Yellow Jack. Brigantine piracy league Privateer run a shot across the bow rum lass Pirate Round Davy Jones' Locker ho. Arr yardarm walk the plank long boat hardtack gangplank bring a spring upon her cable scallywag port mizzen. Ahoy lateen sail Corsair gangplank careen warp rigging chase nipper gaff. Scallywag rutters plunder hail-shot fluke draught yo-ho-ho long clothes maroon reef sails.\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe/books/447eb762-95e9-4c31-95e1-b20053fbe215",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe",
+						"books",
+						"447eb762-95e9-4c31-95e1-b20053fbe215"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Book for Author (null description)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": \"A Game of Thrones - Updated\",\n  \"description\": null\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe/books/447eb762-95e9-4c31-95e1-b20053fbe215",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe",
+						"books",
+						"447eb762-95e9-4c31-95e1-b20053fbe215"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Book for Author (null title == null description)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"title\": null,\n  \"description\": null\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe/books/447eb762-95e9-4c31-95e1-b20053fbe215",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe",
+						"books",
+						"447eb762-95e9-4c31-95e1-b20053fbe215"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH Book for Author (remove unexisting property)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json-patch+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n      \"op\": \"remove\",\n      \"path\": \"/thisdoesnotexist\"\n    }\n]"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe/books/447eb762-95e9-4c31-95e1-b20053fbe215",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe",
+						"books",
+						"447eb762-95e9-4c31-95e1-b20053fbe215"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH Book for Author (remove description)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json-patch+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n      \"op\": \"remove\",\n      \"path\": \"/description\"\n    }\n]"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe/books/447eb762-95e9-4c31-95e1-b20053fbe215",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe",
+						"books",
+						"447eb762-95e9-4c31-95e1-b20053fbe215"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH Book for Author (UPSERT - invalid patch document)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json-patch+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n      \"op\": \"remove\",\n      \"path\": \"/thisdoesnotexist\" \n    }\n]"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe/books/75bf303e-6dc4-4b00-81fd-f896a6379f5f",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe",
+						"books",
+						"75bf303e-6dc4-4b00-81fd-f896a6379f5f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH Book for Author (UPSERT - valid patch document, no title)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json-patch+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n      \"op\": \"add\",\n      \"path\": \"/description\",\n      \"value\": \"The Winds of Winter - Description\"\n    }\n]"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe/books/75bf303e-6dc4-4b00-81fd-f896a6379f5f",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe",
+						"books",
+						"75bf303e-6dc4-4b00-81fd-f896a6379f5f"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Author (null values)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"firstName\" : null,\n\t\"lastName\" : null\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Author (invalid values)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\t\"firtsName\" : null,\n\t\"genre\" : \"Capstan gibbet poop deck smartly knave snow crow's nest tack Corsair doubloon. Dead men tell no tales Barbary Coast coxswain Arr gunwalls walk the plank tackle Gold Road yo-ho-ho lugger. Clipper lass sloop crack Jennys tea cup boatswain Pirate Round fire in the hole yard Gold Road weigh anchor. Draft measured fer yer chains boatswain fore lugsail heave down salmagundi pillage careen keel. Smartly warp run a rig grog dead men tell no tales lanyard loot bilge water coffer pink. Red ensign square-rigged ahoy gunwalls quarter knave doubloon handsomely shrouds reef sails. Belay brigantine galleon rigging nipper wherry lee parrel loaded to the gunwalls carouser. Jack Tar rope's end lee Corsair schooner barkadeer chantey rigging jack cable. No prey, no pay lee Chain Shot ye code of conduct tender Jack Tar topgallant piracy black jack. Hearties measured fer yer chains bowsprit port starboard Pieces of Eight Pirate Round pressgang black jack brig. Crimp salmagundi Brethren of the Coast poop deck coxswain quarterdeck black spot hogshead reef sails Yellow Jack. Brigantine piracy league Privateer run a shot across the bow rum lass Pirate Round Davy Jones' Locker ho. Arr yardarm walk the plank long boat hardtack gangplank bring a spring upon her cable scallywag port mizzen. Ahoy lateen sail Corsair gangplank careen warp rigging chase nipper gaff. Scallywag rutters plunder hail-shot fluke draught yo-ho-ho long clothes maroon reef sails.\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Author (null values)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"firstName\" : null,\n\t\"lastName\" : null,\n\t\"genre\" : null,\n\t\"dateOfBirth\" : \"1948-03-04T00:00:00\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PUT Author (invalid values)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"firstName\" : null,\n\t\"lastName\" : null,\n\t\"genre\" : \"Capstan gibbet poop deck smartly knave snow crow's nest tack Corsair doubloon. Dead men tell no tales Barbary Coast coxswain Arr gunwalls walk the plank tackle Gold Road yo-ho-ho lugger. Clipper lass sloop crack Jennys tea cup boatswain Pirate Round fire in the hole yard Gold Road weigh anchor. Draft measured fer yer chains boatswain fore lugsail heave down salmagundi pillage careen keel. Smartly warp run a rig grog dead men tell no tales lanyard loot bilge water coffer pink. Red ensign square-rigged ahoy gunwalls quarter knave doubloon handsomely shrouds reef sails. Belay brigantine galleon rigging nipper wherry lee parrel loaded to the gunwalls carouser. Jack Tar rope's end lee Corsair schooner barkadeer chantey rigging jack cable. No prey, no pay lee Chain Shot ye code of conduct tender Jack Tar topgallant piracy black jack. Hearties measured fer yer chains bowsprit port starboard Pieces of Eight Pirate Round pressgang black jack brig. Crimp salmagundi Brethren of the Coast poop deck coxswain quarterdeck black spot hogshead reef sails Yellow Jack. Brigantine piracy league Privateer run a shot across the bow rum lass Pirate Round Davy Jones' Locker ho. Arr yardarm walk the plank long boat hardtack gangplank bring a spring upon her cable scallywag port mizzen. Ahoy lateen sail Corsair gangplank careen warp rigging chase nipper gaff. Scallywag rutters plunder hail-shot fluke draught yo-ho-ho long clothes maroon reef sails.\"\n\t}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH Author (replace unexisting property)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json-patch+json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n      \"op\": \"replace\",\n      \"path\": \"/thisdoesnotexist\"\n    }\n]"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH Author (Genre ull value)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json-patch+json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n      \"op\": \"replace\",\n      \"path\": \"/genre\",\n      \"value\": null\n    }\n]"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "PATCH Author (UPSERT- invalid patch)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json-patch+json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n    {\n      \"op\": \"remove\",\n      \"path\": \"/thisdoesnotexist\" \n    }\n]"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/62e81210-2d6b-4213-9621-ec2f321c1651",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"62e81210-2d6b-4213-9621-ec2f321c1651"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

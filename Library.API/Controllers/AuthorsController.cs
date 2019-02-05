@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +18,11 @@ namespace Library.API.Controllers
     public class AuthorsController : Controller
     { 
         ILibraryRepository libraryRepository;
-        public AuthorsController(ILibraryRepository LibraryRepository)
+        ILogger<AuthorsController> logger;
+        public AuthorsController(ILibraryRepository LibraryRepository,ILogger<AuthorsController> Logger)
         {
             libraryRepository = LibraryRepository;
+            logger = Logger;
         }
         [HttpGet()]
         public IActionResult GetAuthors()
@@ -42,6 +45,8 @@ namespace Library.API.Controllers
         {
             if (authorVM == null)
                 return BadRequest();
+            if (!ModelState.IsValid)
+                return new UnprocessableEntityObject(ModelState);
             var author = Mapper.Map<Author>(authorVM);
             libraryRepository.AddAuthor(author);
             if (!libraryRepository.Save())
@@ -92,13 +97,16 @@ namespace Library.API.Controllers
             libraryRepository.DeleteAuthor(author);
             if (!libraryRepository.Save())
                 throw new Exception($"Delete author {id} failed on server");
+            logger.LogInformation(100, $"Author {id} was deleted");
             return NoContent();
         }
         [HttpPut("{id}")]//HttpPut full update 
-        public IActionResult fullyUpdateAuthor(Guid id, [FromBody] AuthorUpdateVM authorVM)
+        public IActionResult FullyUpdateAuthor(Guid id, [FromBody] AuthorUpdateVM authorVM)
         {
             if (authorVM == null)
                 return BadRequest();
+            if (!ModelState.IsValid)
+                return new UnprocessableEntityObject(ModelState);
             var author = libraryRepository.GetAuthor(id);
             if (author == null)
             {
@@ -127,7 +135,10 @@ namespace Library.API.Controllers
             {
                 //Upserting: using HttpPatch to insert
                 var newAuthorVM = new AuthorUpdateVM();
-                authorPatch.ApplyTo(newAuthorVM);
+                authorPatch.ApplyTo(newAuthorVM ,ModelState);
+                TryValidateModel(newAuthorVM);
+                if(!ModelState.IsValid)
+                    return new UnprocessableEntityObject(ModelState);
                 var authorAdd = Mapper.Map<Author>(newAuthorVM);
                 authorAdd.Id = id;
                 libraryRepository.AddAuthor(authorAdd);
@@ -137,7 +148,10 @@ namespace Library.API.Controllers
                 return CreatedAtRoute("GetAuthor", new { id = createdauthor.Id }, createdauthor);
             }
             var authorVM = Mapper.Map<AuthorUpdateVM>(author);
-            authorPatch.ApplyTo(authorVM);
+            authorPatch.ApplyTo(authorVM, ModelState);
+            TryValidateModel(authorVM);
+            if (!ModelState.IsValid)
+                return new UnprocessableEntityObject(ModelState);
             Mapper.Map(authorVM, author);
             libraryRepository.UpdateAuthor(author);
             if (!libraryRepository.Save())
