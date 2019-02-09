@@ -13,25 +13,81 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Library.API.Controllers
-{    
+{
     [Route("api/authors")]
     public class AuthorsController : Controller
-    { 
+    {
         ILibraryRepository libraryRepository;
         ILogger<AuthorsController> logger;
-        public AuthorsController(ILibraryRepository LibraryRepository,ILogger<AuthorsController> Logger)
+        IUrlHelper urlHelper;
+        public AuthorsController(ILibraryRepository LibraryRepository, ILogger<AuthorsController> Logger,IUrlHelper UrlHelper)
         {
             libraryRepository = LibraryRepository;
             logger = Logger;
+            urlHelper = UrlHelper;
         }
-        [HttpGet()]
-        public IActionResult GetAuthors()
+        [HttpGet(Name ="GetAuthors")]
+        public IActionResult GetAuthors(AuthorResourceParams authorResourceParams)
         {
-            var authors = libraryRepository.GetAuthors();
+            var authors = libraryRepository.GetAuthors(authorResourceParams);
+            var previousPageLink = authors.HasPrevious ?
+                CreateAuthorResourceUri(authorResourceParams,
+                ResourceUriType.PreviousPage) : null;
+
+            var nextPageLink = authors.HasNext ?
+                CreateAuthorResourceUri(authorResourceParams,
+                ResourceUriType.NextPage) : null;
+
+            var paginationMetadata = new
+            {
+                totalCount = authors.TotalCount,
+                pageSize = authors.PageSize,
+                currentPage = authors.CurrentPage,
+                totalPages = authors.TotalPages,
+                previousPageLink = previousPageLink,
+                nextPageLink = nextPageLink
+            };
+
+            Response.Headers.Add("X-Pagination",
+                Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
             var authorsVM = Mapper.Map<IEnumerable<AuthorVM>>(authors);
             return Ok(authorsVM);
         }
-        [HttpGet("{id}",Name ="GetAuthor")]
+        private string CreateAuthorResourceUri(AuthorResourceParams authorResourceParams,ResourceUriType type)
+        {
+            switch (type)
+            {
+                case ResourceUriType.PreviousPage:
+                    return urlHelper.Link("GetAuthors",
+                      new
+                      {
+                          searchQuery = authorResourceParams.SearchQuery,
+                          genre = authorResourceParams.Genre,
+                          pageNumber = authorResourceParams.PageNumber - 1,
+                          pageSize = authorResourceParams.PageSize
+                      });
+                case ResourceUriType.NextPage:
+                    return urlHelper.Link("GetAuthors",
+                      new
+                      {
+                          searchQuery = authorResourceParams.SearchQuery,
+                          genre = authorResourceParams.Genre,
+                          pageNumber = authorResourceParams.PageNumber + 1,
+                          pageSize = authorResourceParams.PageSize
+                      });
+
+                default:
+                    return urlHelper.Link("GetAuthors",
+                    new
+                    {
+                        searchQuery=authorResourceParams.SearchQuery,
+                        genre = authorResourceParams.Genre,
+                        pageNumber = authorResourceParams.PageNumber,
+                        pageSize = authorResourceParams.PageSize
+                    });
+            }
+        }
+        [HttpGet("{id}", Name = "GetAuthor")]
         public IActionResult GetAuthor(Guid id)
         {
             var author = libraryRepository.GetAuthor(id);
@@ -68,10 +124,10 @@ namespace Library.API.Controllers
                 throw new Exception("Creating collection of authors failed to save");
             var created = Mapper.Map<IEnumerable<AuthorVM>>(authors);
             var id = string.Join(",", created.Select(a => a.Id));
-            return CreatedAtRoute("GetAuthors",new { ids=id},created);
+            return CreatedAtRoute("GetAuthorCollection", new { ids = id }, created);
         }
-        [HttpGet("({ids})",Name ="GetAuthors")]
-        public IActionResult GetAuthorCollection([ModelBinder(BinderType =typeof(IdsModelBinder))]IEnumerable<Guid> ids)
+        [HttpGet("({ids})", Name = "GetAuthorCollection")]
+        public IActionResult GetAuthorCollection([ModelBinder(BinderType = typeof(IdsModelBinder))]IEnumerable<Guid> ids)
         {
             if (ids == null)
                 return BadRequest();
@@ -135,9 +191,9 @@ namespace Library.API.Controllers
             {
                 //Upserting: using HttpPatch to insert
                 var newAuthorVM = new AuthorUpdateVM();
-                authorPatch.ApplyTo(newAuthorVM ,ModelState);
+                authorPatch.ApplyTo(newAuthorVM, ModelState);
                 TryValidateModel(newAuthorVM);
-                if(!ModelState.IsValid)
+                if (!ModelState.IsValid)
                     return new UnprocessableEntityObject(ModelState);
                 var authorAdd = Mapper.Map<Author>(newAuthorVM);
                 authorAdd.Id = id;

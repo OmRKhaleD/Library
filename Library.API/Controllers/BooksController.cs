@@ -17,7 +17,7 @@ namespace Library.API.Controllers
     {
         ILibraryRepository libraryRepository;
         ILogger<BooksController> logger;
-        public BooksController(ILibraryRepository LibraryRepository,ILogger<BooksController> Logger)
+        public BooksController(ILibraryRepository LibraryRepository, ILogger<BooksController> Logger)
         {
             libraryRepository = LibraryRepository;
             logger = Logger;
@@ -32,7 +32,7 @@ namespace Library.API.Controllers
             return Ok(booksVM);
         }
         [HttpGet("{id}", Name = "GetBook")]
-        public IActionResult GetAuthorBook(Guid authorId,Guid id)
+        public IActionResult GetAuthorBook(Guid authorId, Guid id)
         {
             if (!libraryRepository.AuthorExists(authorId))
                 return NotFound();
@@ -43,7 +43,7 @@ namespace Library.API.Controllers
             return Ok(bookVM);
         }
         [HttpPost]
-        public IActionResult CreateBook(Guid authorId,[FromBody] BookCreateVM bookVM)
+        public IActionResult CreateBook(Guid authorId, [FromBody] BookCreateVM bookVM)
         {
             if (bookVM == null)
                 return BadRequest();
@@ -61,7 +61,7 @@ namespace Library.API.Controllers
             return CreatedAtRoute("GetBook", new { authorId = authorId, id = createdbook.Id }, createdbook);
         }
         [HttpDelete("{id}")]
-        public IActionResult DeleteAuthorBook(Guid authorId,Guid id)
+        public IActionResult DeleteAuthorBook(Guid authorId, Guid id)
         {
             if (!libraryRepository.AuthorExists(authorId))
                 return NotFound();
@@ -75,7 +75,7 @@ namespace Library.API.Controllers
             return NoContent();
         }
         [HttpPut("{id}")]//HttpPut full update 
-        public IActionResult FullyUpdateAuthorBook(Guid authorId, Guid id,[FromBody] BookUpdateVM bookVM)
+        public IActionResult FullyUpdateAuthorBook(Guid authorId, Guid id, [FromBody] BookUpdateVM bookVM)
         {
             if (bookVM == null)
                 return BadRequest();
@@ -104,7 +104,7 @@ namespace Library.API.Controllers
             return NoContent();
         }
         [HttpPatch("{id}")]
-        public IActionResult PartiallyUpdateAuthorBook(Guid authorId,Guid id,[FromBody]JsonPatchDocument<BookUpdateVM> bookPatch)
+        public IActionResult PartiallyUpdateAuthorBook(Guid authorId, Guid id, [FromBody]JsonPatchDocument<BookUpdateVM> bookPatch)
         {
             if (bookPatch == null)
                 return BadRequest();

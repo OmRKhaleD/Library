@@ -1,0 +1,354 @@
+{
+	"info": {
+		"_postman_id": "01c88d5f-3dfc-4880-a489-a5f1be2fce8d",
+		"name": "RESTful API ASP.NET Core - module 6",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET Authors",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Authors (pageNumber = 1, pageSize = 5)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors?pageNumber=1&pageSize=5",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Authors (pageNumber = 1, pageSize = 100)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors?pageNumber=1&pageSize=100",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "1"
+						},
+						{
+							"key": "pageSize",
+							"value": "100"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Authors (pageNumber = 2, pageSize = 5)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors?pageNumber=2&pageSize=5",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					],
+					"query": [
+						{
+							"key": "pageNumber",
+							"value": "2"
+						},
+						{
+							"key": "pageSize",
+							"value": "5"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Authors (genre = Fantasy)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors?genre=Fantasy",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					],
+					"query": [
+						{
+							"key": "genre",
+							"value": "Fantasy"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Authors (genre = Fantasy, pageNumber = 2, pageSize = 2)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors?genre=Fantasy&pageNumber=2&pageSize=1",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					],
+					"query": [
+						{
+							"key": "genre",
+							"value": "Fantasy"
+						},
+						{
+							"key": "pageNumber",
+							"value": "2"
+						},
+						{
+							"key": "pageSize",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Authors (searchQuery = a)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors?searchQuery=a",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					],
+					"query": [
+						{
+							"key": "searchQuery",
+							"value": "a"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Authors (searchQuery = a, genre = Fantasy)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors?searchQuery=a&genre=Fantasy",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					],
+					"query": [
+						{
+							"key": "searchQuery",
+							"value": "a"
+						},
+						{
+							"key": "genre",
+							"value": "Fantasy"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Authors (searchQuery = a, genre = Fantasy, pageNumber = 2, pageSize = 2)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors?searchQuery=a&genre=Fantasy&pageNumber=2&pageSize=1",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					],
+					"query": [
+						{
+							"key": "searchQuery",
+							"value": "a"
+						},
+						{
+							"key": "genre",
+							"value": "Fantasy"
+						},
+						{
+							"key": "pageNumber",
+							"value": "2"
+						},
+						{
+							"key": "pageSize",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

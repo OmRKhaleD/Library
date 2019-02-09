@@ -21,6 +21,8 @@ namespace Library.API
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
+            .UseSetting(WebHostDefaults.DetailedErrorsKey, "true")
+            .UseUrls("http://asp.netcore2.com/api/authors")
                  .UseNLog();
     }
 }

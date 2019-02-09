@@ -14,6 +14,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Library.API
 {
@@ -38,12 +41,20 @@ namespace Library.API
                 //accept xml input
                 opt.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
             });
-            services.AddDbContext<LibraryDbContext>(o=>o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<LibraryDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<ILibraryRepository, LibraryRepository>();
+
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            services.AddScoped<IUrlHelper, UrlHelper>(implementationFactory=> {
+                var actionContext=
+                implementationFactory.GetService<IActionContextAccessor>().ActionContext;
+                return new UrlHelper(actionContext);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,LibraryDbContext context)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, LibraryDbContext context)
         {
             if (env.IsDevelopment())
             {
@@ -52,10 +63,10 @@ namespace Library.API
             else
             {
                 app.UseExceptionHandler(appBuilder => {
-                appBuilder.Run(async con =>{
-                    con.Response.StatusCode = 500;
-                    await con.Response.WriteAsync("Unexpexcted fault heppend, please try again later.");
-                });
+                    appBuilder.Run(async con => {
+                        con.Response.StatusCode = 500;
+                        await con.Response.WriteAsync("Unexpexcted fault heppend, please try again later.");
+                    });
                 });
             }
             context.EnsureSeedDataForContext();
