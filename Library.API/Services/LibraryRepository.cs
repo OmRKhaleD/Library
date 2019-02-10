@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Library.API.Entity;
 using Library.API.Helper;
+using Library.API.Models;
 using Microsoft.EntityFrameworkCore;
+
 
 namespace Library.API.Services
 {
     public class LibraryRepository : ILibraryRepository
     {
         LibraryDbContext context;
-        public LibraryRepository(LibraryDbContext _context)
+        IPropertyMappingService propertyMappingService;
+        public LibraryRepository(LibraryDbContext _context, IPropertyMappingService _propertyMappingService)
         {
             context = _context;
+            propertyMappingService = _propertyMappingService;
         }
         public void AddAuthor(Author author)
         {
@@ -68,9 +71,11 @@ namespace Library.API.Services
 
         public PagedList<Author> GetAuthors(AuthorResourceParams authorResourceParams)
         {
-            var collectionBeforePaging = context.Authors
-                .OrderBy(a => a.FirstName)
-                .ThenBy(a => a.LastName).AsQueryable();
+            //var collectionBeforePaging = context.Authors
+            //    .OrderBy(a => a.FirstName)
+            //    .ThenBy(a => a.LastName).AsQueryable();
+
+            var collectionBeforePaging = context.Authors.ApplySort(authorResourceParams.OrderBy,propertyMappingService.GetPropertyMapping<AuthorVM, Author>());
             if (!string.IsNullOrEmpty(authorResourceParams.Genre))
             {
                 var genreWhereClause = authorResourceParams.Genre.Trim().ToLowerInvariant();

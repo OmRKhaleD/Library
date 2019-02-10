@@ -17,6 +17,7 @@ using NLog.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Newtonsoft.Json.Serialization;
 
 namespace Library.API
 {
@@ -40,6 +41,9 @@ namespace Library.API
                 opt.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
                 //accept xml input
                 opt.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
+                //to make field names start with lowercase
+            }).AddJsonOptions(opt=> {
+                opt.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             });
             services.AddDbContext<LibraryDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<ILibraryRepository, LibraryRepository>();
@@ -51,6 +55,9 @@ namespace Library.API
                 implementationFactory.GetService<IActionContextAccessor>().ActionContext;
                 return new UrlHelper(actionContext);
             });
+
+            services.AddTransient<IPropertyMappingService, PropertyMappingService>();
+            services.AddTransient<ITypeHelperService, TypeHelperService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

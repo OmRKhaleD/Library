@@ -20,15 +20,24 @@ namespace Library.API.Controllers
         ILibraryRepository libraryRepository;
         ILogger<AuthorsController> logger;
         IUrlHelper urlHelper;
-        public AuthorsController(ILibraryRepository LibraryRepository, ILogger<AuthorsController> Logger,IUrlHelper UrlHelper)
+        IPropertyMappingService propertyMappingService;
+        ITypeHelperService typeHelperService;
+        public AuthorsController(ILibraryRepository LibraryRepository, ILogger<AuthorsController> Logger,IUrlHelper UrlHelper,
+            IPropertyMappingService PropertyMappingService, ITypeHelperService TypeHelperService)
         {
             libraryRepository = LibraryRepository;
             logger = Logger;
             urlHelper = UrlHelper;
+            propertyMappingService = PropertyMappingService;
+            typeHelperService = TypeHelperService;
         }
         [HttpGet(Name ="GetAuthors")]
         public IActionResult GetAuthors(AuthorResourceParams authorResourceParams)
         {
+            if (!propertyMappingService.ValidMappingExistsFor<AuthorVM, Author>(authorResourceParams.OrderBy))
+                return BadRequest();
+            if (!typeHelperService.TypeHasProperties<AuthorVM>(authorResourceParams.Fields))
+                return BadRequest();
             var authors = libraryRepository.GetAuthors(authorResourceParams);
             var previousPageLink = authors.HasPrevious ?
                 CreateAuthorResourceUri(authorResourceParams,
@@ -51,7 +60,7 @@ namespace Library.API.Controllers
             Response.Headers.Add("X-Pagination",
                 Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
             var authorsVM = Mapper.Map<IEnumerable<AuthorVM>>(authors);
-            return Ok(authorsVM);
+            return Ok(authorsVM.ShapeData(authorResourceParams.Fields));
         }
         private string CreateAuthorResourceUri(AuthorResourceParams authorResourceParams,ResourceUriType type)
         {
@@ -61,6 +70,8 @@ namespace Library.API.Controllers
                     return urlHelper.Link("GetAuthors",
                       new
                       {
+                          fields = authorResourceParams.Fields,
+                          orderBy=authorResourceParams.OrderBy,
                           searchQuery = authorResourceParams.SearchQuery,
                           genre = authorResourceParams.Genre,
                           pageNumber = authorResourceParams.PageNumber - 1,
@@ -70,6 +81,8 @@ namespace Library.API.Controllers
                     return urlHelper.Link("GetAuthors",
                       new
                       {
+                          fields = authorResourceParams.Fields,
+                          orderBy = authorResourceParams.OrderBy,
                           searchQuery = authorResourceParams.SearchQuery,
                           genre = authorResourceParams.Genre,
                           pageNumber = authorResourceParams.PageNumber + 1,
@@ -80,7 +93,9 @@ namespace Library.API.Controllers
                     return urlHelper.Link("GetAuthors",
                     new
                     {
-                        searchQuery=authorResourceParams.SearchQuery,
+                        fields = authorResourceParams.Fields,
+                        orderBy = authorResourceParams.OrderBy,
+                        searchQuery = authorResourceParams.SearchQuery,
                         genre = authorResourceParams.Genre,
                         pageNumber = authorResourceParams.PageNumber,
                         pageSize = authorResourceParams.PageSize
@@ -88,13 +103,15 @@ namespace Library.API.Controllers
             }
         }
         [HttpGet("{id}", Name = "GetAuthor")]
-        public IActionResult GetAuthor(Guid id)
+        public IActionResult GetAuthor(Guid id,[FromQuery] string fields)
         {
+            if (!typeHelperService.TypeHasProperties<AuthorVM>(fields))
+                return BadRequest();
             var author = libraryRepository.GetAuthor(id);
             if (author == null)
                 return NotFound();
             var authorVM = Mapper.Map<AuthorVM>(author);
-            return Ok(authorVM);
+            return Ok(authorVM.ShapeData(fields));
         }
         [HttpPost]
         public IActionResult CreateAuthor([FromBody] AuthorCreateVM authorVM)
