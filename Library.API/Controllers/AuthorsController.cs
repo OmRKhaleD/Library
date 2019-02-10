@@ -39,28 +39,34 @@ namespace Library.API.Controllers
             if (!typeHelperService.TypeHasProperties<AuthorVM>(authorResourceParams.Fields))
                 return BadRequest();
             var authors = libraryRepository.GetAuthors(authorResourceParams);
-            var previousPageLink = authors.HasPrevious ?
-                CreateAuthorResourceUri(authorResourceParams,
-                ResourceUriType.PreviousPage) : null;
-
-            var nextPageLink = authors.HasNext ?
-                CreateAuthorResourceUri(authorResourceParams,
-                ResourceUriType.NextPage) : null;
 
             var paginationMetadata = new
             {
                 totalCount = authors.TotalCount,
                 pageSize = authors.PageSize,
                 currentPage = authors.CurrentPage,
-                totalPages = authors.TotalPages,
-                previousPageLink = previousPageLink,
-                nextPageLink = nextPageLink
+                totalPages = authors.TotalPages
             };
 
             Response.Headers.Add("X-Pagination",
                 Newtonsoft.Json.JsonConvert.SerializeObject(paginationMetadata));
             var authorsVM = Mapper.Map<IEnumerable<AuthorVM>>(authors);
-            return Ok(authorsVM.ShapeData(authorResourceParams.Fields));
+
+            var links = CreateAuthorsLinks(authorResourceParams, authors.HasNext, authors.HasPrevious);
+            var shapedAuthors = authorsVM.ShapeData(authorResourceParams.Fields);
+            var shapedAuthorsWithLinks = shapedAuthors.Select(a => {
+                var authorAsDictionary = a as IDictionary<string, object>;
+                var authorLinks = CreateAuthorLinks((Guid)authorAsDictionary["Id"], authorResourceParams.Fields);
+                authorAsDictionary.Add("links", authorLinks);
+                return authorAsDictionary;
+            });
+
+            var linkedCollectionResource = new
+            {
+                value = shapedAuthorsWithLinks,
+                links = links
+            };
+            return Ok(linkedCollectionResource);
         }
         private string CreateAuthorResourceUri(AuthorResourceParams authorResourceParams,ResourceUriType type)
         {
@@ -88,7 +94,7 @@ namespace Library.API.Controllers
                           pageNumber = authorResourceParams.PageNumber + 1,
                           pageSize = authorResourceParams.PageSize
                       });
-
+                case ResourceUriType.Current:
                 default:
                     return urlHelper.Link("GetAuthors",
                     new
@@ -111,7 +117,14 @@ namespace Library.API.Controllers
             if (author == null)
                 return NotFound();
             var authorVM = Mapper.Map<AuthorVM>(author);
-            return Ok(authorVM.ShapeData(fields));
+            var links = CreateAuthorLinks(id, fields);
+
+            var linkedResourceToReturn = authorVM.ShapeData(fields)
+                as IDictionary<string, object>;
+
+            linkedResourceToReturn.Add("links", links);
+
+            return Ok(linkedResourceToReturn);
         }
         [HttpPost]
         public IActionResult CreateAuthor([FromBody] AuthorCreateVM authorVM)
@@ -125,7 +138,12 @@ namespace Library.API.Controllers
             if (!libraryRepository.Save())
                 throw new Exception("Creating author failed to save");
             var createdAuthor = Mapper.Map<AuthorVM>(author);
-            return CreatedAtRoute("GetAuthor", new { id = createdAuthor.Id }, createdAuthor);
+            var links = CreateAuthorLinks(createdAuthor.Id, null);
+            var linkedResourceToReturn = createdAuthor.ShapeData(null)
+                as IDictionary<string, object>;
+
+            linkedResourceToReturn.Add("links", links);
+            return CreatedAtRoute("GetAuthor", new { id = linkedResourceToReturn["Id"] }, linkedResourceToReturn);
         }
         [HttpPost("authorcollections")]
         public IActionResult CreateAuthors([FromBody]IEnumerable<AuthorCreateVM> authorVM)
@@ -161,7 +179,7 @@ namespace Library.API.Controllers
                 return new StatusCodeResult(StatusCodes.Status409Conflict);
             return NotFound();
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}",Name ="DeleteAuthor")]
         public IActionResult DeleteAuthor(Guid id)
         {
             var author = libraryRepository.GetAuthor(id);
@@ -173,7 +191,7 @@ namespace Library.API.Controllers
             logger.LogInformation(100, $"Author {id} was deleted");
             return NoContent();
         }
-        [HttpPut("{id}")]//HttpPut full update 
+        [HttpPut("{id}",Name = "FullyUpdateAuthor")]//HttpPut full update 
         public IActionResult FullyUpdateAuthor(Guid id, [FromBody] AuthorUpdateVM authorVM)
         {
             if (authorVM == null)
@@ -198,7 +216,7 @@ namespace Library.API.Controllers
                 throw new Exception($"Update author {id} failed on server");
             return NoContent();
         }
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}",Name = "PartiallyUpdateAuthor")]
         public IActionResult PartiallyUpdateAuthor(Guid id, [FromBody]JsonPatchDocument<AuthorUpdateVM> authorPatch)
         {
             if (authorPatch == null)
@@ -230,6 +248,32 @@ namespace Library.API.Controllers
             if (!libraryRepository.Save())
                 throw new Exception($"Update author {id} failed on server");
             return NoContent();
+        }
+
+        private IEnumerable<LinkVM> CreateAuthorLinks(Guid id, string fields)
+        {
+            var links = new List<LinkVM>();
+            if (string.IsNullOrWhiteSpace(fields))
+                links.Add(new LinkVM(urlHelper.Link("GetAuthor", new { id = id }),"self","GET"));
+            else
+                links.Add(new LinkVM(urlHelper.Link("GetAuthor", new { id = id, fields = fields }),"self","GET"));
+            links.Add(new LinkVM(urlHelper.Link("DeleteAuthor", new { id = id }),"delete_author","DELETE"));
+            links.Add(new LinkVM(urlHelper.Link("FullyUpdateAuthor", new { id = id }), "update_author", "PUT"));
+            links.Add(new LinkVM(urlHelper.Link("PartiallyUpdateAuthor", new { id = id }), "partially_update_author", "PATCH"));
+            links.Add(new LinkVM(urlHelper.Link("CreateBook", new { authorId = id }),"create_book_for_author","POST"));
+            links.Add(new LinkVM(urlHelper.Link("GetBooksForAuthor", new { authorId = id }),"books","GET"));
+            return links;
+        }
+
+        private IEnumerable<LinkVM> CreateAuthorsLinks(AuthorResourceParams authorResourceParams,bool hasNext, bool hasPrevious)
+        {
+            var links = new List<LinkVM>();
+            links.Add(new LinkVM(CreateAuthorResourceUri(authorResourceParams,ResourceUriType.Current), "self", "GET"));
+            if (hasNext)
+                links.Add(new LinkVM(CreateAuthorResourceUri(authorResourceParams, ResourceUriType.NextPage),"nextPage", "GET"));
+            if (hasPrevious)
+                links.Add(new LinkVM(CreateAuthorResourceUri(authorResourceParams, ResourceUriType.PreviousPage),"previousPage", "GET"));
+            return links;
         }
     }
 }

@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Library.API.Controllers
 {
@@ -17,19 +18,23 @@ namespace Library.API.Controllers
     {
         ILibraryRepository libraryRepository;
         ILogger<BooksController> logger;
-        public BooksController(ILibraryRepository LibraryRepository, ILogger<BooksController> Logger)
+        IUrlHelper urlHelper;
+        public BooksController(ILibraryRepository LibraryRepository, ILogger<BooksController> Logger,IUrlHelper UrlHelper)
         {
             libraryRepository = LibraryRepository;
             logger = Logger;
+            urlHelper = UrlHelper;
         }
-        [HttpGet()]
+        [HttpGet(Name ="GetBooks")]
         public IActionResult GetAuthorBooks(Guid authorId)
         {
             if (!libraryRepository.AuthorExists(authorId))
                 return NotFound();
             var books = libraryRepository.GetBooksForAuthor(authorId);
             var booksVM = Mapper.Map<IEnumerable<BookVM>>(books);
-            return Ok(booksVM);
+            booksVM = booksVM.Select(book => { book = CreatebookLinks(book); return book; });
+            var wrapper = new LinkedCollectionResourceWrapperVM<BookVM>(booksVM);
+            return Ok(CreateBooksLinks(wrapper));
         }
         [HttpGet("{id}", Name = "GetBook")]
         public IActionResult GetAuthorBook(Guid authorId, Guid id)
@@ -40,9 +45,9 @@ namespace Library.API.Controllers
             if (book == null)
                 return NotFound();
             var bookVM = Mapper.Map<BookVM>(book);
-            return Ok(bookVM);
+            return Ok(CreatebookLinks(bookVM));
         }
-        [HttpPost]
+        [HttpPost(Name ="CreateBook")]
         public IActionResult CreateBook(Guid authorId, [FromBody] BookCreateVM bookVM)
         {
             if (bookVM == null)
@@ -58,9 +63,9 @@ namespace Library.API.Controllers
             if (!libraryRepository.Save())
                 throw new Exception($"Createing book for {authorId} failed to save");
             var createdbook = Mapper.Map<BookVM>(book);
-            return CreatedAtRoute("GetBook", new { authorId = authorId, id = createdbook.Id }, createdbook);
+            return CreatedAtRoute("GetBook", new { authorId = authorId, id = createdbook.Id }, CreatebookLinks(createdbook));
         }
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}",Name ="DeleteBook")]
         public IActionResult DeleteAuthorBook(Guid authorId, Guid id)
         {
             if (!libraryRepository.AuthorExists(authorId))
@@ -74,7 +79,7 @@ namespace Library.API.Controllers
             logger.LogInformation(100, $"Book {id} for Author {authorId} was deleted");
             return NoContent();
         }
-        [HttpPut("{id}")]//HttpPut full update 
+        [HttpPut("{id}",Name ="FullyUpdateBook")]//HttpPut full update 
         public IActionResult FullyUpdateAuthorBook(Guid authorId, Guid id, [FromBody] BookUpdateVM bookVM)
         {
             if (bookVM == null)
@@ -103,7 +108,7 @@ namespace Library.API.Controllers
                 throw new Exception($"Update book {id} for author {authorId} failed on server");
             return NoContent();
         }
-        [HttpPatch("{id}")]
+        [HttpPatch("{id}",Name ="PartiallyUpdateBook")]
         public IActionResult PartiallyUpdateAuthorBook(Guid authorId, Guid id, [FromBody]JsonPatchDocument<BookUpdateVM> bookPatch)
         {
             if (bookPatch == null)
@@ -141,6 +146,26 @@ namespace Library.API.Controllers
             if (!libraryRepository.Save())
                 throw new Exception($"Update book {id} for author {authorId} failed on server");
             return NoContent();
+        }
+
+        private BookVM CreatebookLinks(BookVM book)
+        {
+            book.Links.Add(new LinkVM(urlHelper.Link("GetBook",new { id=book.Id}),"self","Get"));
+            book.Links.Add(new LinkVM(urlHelper.Link("DeleteBook",new { id = book.Id }),"delete_book","DELETE"));
+            book.Links.Add(new LinkVM(urlHelper.Link("FullyUpdateBook",new { id = book.Id }),"update_book","PUT"));
+            book.Links.Add(new LinkVM(urlHelper.Link("PartiallyUpdateBook",new { id = book.Id }),"partially_update_book","PATCH"));
+            return book;
+        }
+        private LinkedCollectionResourceWrapperVM<BookVM> CreateBooksLinks(
+   LinkedCollectionResourceWrapperVM<BookVM> booksWrapper)
+        {
+            // link to self
+            booksWrapper.Links.Add(
+                new LinkVM(urlHelper.Link("GetBooks", new { }),
+                "self",
+                "GET"));
+
+            return booksWrapper;
         }
     }
 }
