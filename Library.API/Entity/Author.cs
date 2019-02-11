@@ -16,6 +16,7 @@ namespace Library.API.Entity
         public string LastName { get; set; }
         [Required]
         public DateTimeOffset DateOfBirth { get; set; }
+        public DateTimeOffset? DateOfDeath { get; set; }
         [Required]
         [MaxLength(50)]
         public string Genre { get; set; }

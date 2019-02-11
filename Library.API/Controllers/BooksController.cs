@@ -26,18 +26,25 @@ namespace Library.API.Controllers
             urlHelper = UrlHelper;
         }
         [HttpGet(Name ="GetBooks")]
-        public IActionResult GetAuthorBooks(Guid authorId)
+        public IActionResult GetAuthorBooks(Guid authorId,[FromHeader(Name ="Accept")] string mediaType)
         {
             if (!libraryRepository.AuthorExists(authorId))
                 return NotFound();
             var books = libraryRepository.GetBooksForAuthor(authorId);
             var booksVM = Mapper.Map<IEnumerable<BookVM>>(books);
-            booksVM = booksVM.Select(book => { book = CreatebookLinks(book); return book; });
-            var wrapper = new LinkedCollectionResourceWrapperVM<BookVM>(booksVM);
-            return Ok(CreateBooksLinks(wrapper));
+            if (mediaType == "application/vnd.marvin.hateoas+json")
+            {
+                booksVM = booksVM.Select(book => { book = CreatebookLinks(book); return book; });
+                var wrapper = new LinkedCollectionResourceWrapperVM<BookVM>(booksVM);
+                return Ok(CreateBooksLinks(wrapper));
+            }
+            else
+            {
+                return Ok(booksVM);
+            }
         }
         [HttpGet("{id}", Name = "GetBook")]
-        public IActionResult GetAuthorBook(Guid authorId, Guid id)
+        public IActionResult GetAuthorBook(Guid authorId, Guid id, [FromHeader(Name = "Accept")] string mediaType)
         {
             if (!libraryRepository.AuthorExists(authorId))
                 return NotFound();
@@ -45,10 +52,13 @@ namespace Library.API.Controllers
             if (book == null)
                 return NotFound();
             var bookVM = Mapper.Map<BookVM>(book);
-            return Ok(CreatebookLinks(bookVM));
+            if (mediaType == "application/vnd.marvin.hateoas+json")
+                return Ok(CreatebookLinks(bookVM));
+            else
+                return Ok(bookVM);
         }
         [HttpPost(Name ="CreateBook")]
-        public IActionResult CreateBook(Guid authorId, [FromBody] BookCreateVM bookVM)
+        public IActionResult CreateBook(Guid authorId, [FromBody] BookCreateVM bookVM, [FromHeader(Name = "Accept")] string mediaType)
         {
             if (bookVM == null)
                 return BadRequest();
@@ -63,7 +73,10 @@ namespace Library.API.Controllers
             if (!libraryRepository.Save())
                 throw new Exception($"Createing book for {authorId} failed to save");
             var createdbook = Mapper.Map<BookVM>(book);
-            return CreatedAtRoute("GetBook", new { authorId = authorId, id = createdbook.Id }, CreatebookLinks(createdbook));
+            if (mediaType == "application/vnd.marvin.hateoas+json")
+                return CreatedAtRoute("GetBook", new { authorId = authorId, id = createdbook.Id }, CreatebookLinks(createdbook));
+            else
+                return CreatedAtRoute("GetBook", new { authorId = authorId, id = createdbook.Id }, createdbook);
         }
         [HttpDelete("{id}",Name ="DeleteBook")]
         public IActionResult DeleteAuthorBook(Guid authorId, Guid id)
@@ -156,15 +169,10 @@ namespace Library.API.Controllers
             book.Links.Add(new LinkVM(urlHelper.Link("PartiallyUpdateBook",new { id = book.Id }),"partially_update_book","PATCH"));
             return book;
         }
-        private LinkedCollectionResourceWrapperVM<BookVM> CreateBooksLinks(
-   LinkedCollectionResourceWrapperVM<BookVM> booksWrapper)
+        private LinkedCollectionResourceWrapperVM<BookVM> CreateBooksLinks(LinkedCollectionResourceWrapperVM<BookVM> booksWrapper)
         {
             // link to self
-            booksWrapper.Links.Add(
-                new LinkVM(urlHelper.Link("GetBooks", new { }),
-                "self",
-                "GET"));
-
+            booksWrapper.Links.Add(new LinkVM(urlHelper.Link("GetBooks", new { }),"self","GET"));
             return booksWrapper;
         }
     }

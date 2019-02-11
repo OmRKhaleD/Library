@@ -41,6 +41,21 @@ namespace Library.API
                 opt.OutputFormatters.Add(new XmlDataContractSerializerOutputFormatter());
                 //accept xml input
                 opt.InputFormatters.Add(new XmlDataContractSerializerInputFormatter());
+                var xmlInputFormatter = opt.InputFormatters.OfType<XmlSerializerInputFormatter>().FirstOrDefault();
+                if (xmlInputFormatter != null)
+                {
+                    xmlInputFormatter.SupportedMediaTypes.Add("application/vnd.marvin.author.full+xml");
+                    xmlInputFormatter.SupportedMediaTypes.Add("application/vnd.marvin.authordateofdeath.full+xml");
+                }
+                var jsonInputFormatter = opt.InputFormatters.OfType<JsonInputFormatter>().FirstOrDefault();
+                if (jsonInputFormatter != null)
+                {
+                    jsonInputFormatter.SupportedMediaTypes.Add("application/vnd.marvin.author.full+json");
+                    jsonInputFormatter.SupportedMediaTypes.Add("application/vnd.marvin.authordateofdeath.full+json");
+                }
+                var jsonOutputFormatter = opt.OutputFormatters.OfType<JsonOutputFormatter>().FirstOrDefault();
+                if (jsonOutputFormatter != null)
+                    jsonOutputFormatter.SupportedMediaTypes.Add("application/vnd.marvin.hateoas+json");
                 //to make field names start with lowercase
             }).AddJsonOptions(opt=> {
                 opt.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
@@ -81,11 +96,12 @@ namespace Library.API
             {
                 config.CreateMap<Entity.Author, Models.AuthorVM>()
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
-                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.GetCurrentAge()));
+                .ForMember(dest => dest.Age, opt => opt.MapFrom(src => src.DateOfBirth.GetCurrentAge(src.DateOfDeath)));
 
                 config.CreateMap<Entity.Book, Models.BookVM>();
                 config.CreateMap<Models.AuthorCreateVM, Entity.Author>();
                 config.CreateMap<Models.BookCreateVM, Entity.Book>();
+                config.CreateMap<Models.AuthorCreateDateOfDeathVM, Entity.Author>();
                 config.CreateMap<Models.BookUpdateVM, Entity.Book>();
                 config.CreateMap<Entity.Book, Models.BookUpdateVM>();
                 config.CreateMap<Models.AuthorUpdateVM, Entity.Author>();

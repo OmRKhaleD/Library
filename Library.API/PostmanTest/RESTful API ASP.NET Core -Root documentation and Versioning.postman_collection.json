@@ -1,0 +1,199 @@
+{
+	"info": {
+		"_postman_id": "8e36bad8-7ef5-43b4-968d-688115637e00",
+		"name": "RESTful API ASP.NET Core - module 9",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET Authors (Accept = application/vnd.marvin.hateoas+json)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.marvin.hateoas+json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET root (Accept = application/vnd.marvin.hateoas+json)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/vnd.marvin.hateoas+json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Author",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"firstName\" : \"James\",\n\t\"lastName\" : \"Ellroy\",\n\t\"dateOfBirth\" : \"1948-03-04T00:00:00\",\n\t\"genre\": \"Thriller\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Author (application/vnd.marvin.author.full+json)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.marvin.author.full+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"firstName\" : \"James\",\n\t\"lastName\" : \"Ellroy\",\n\t\"dateOfBirth\" : \"1948-03-04T00:00:00\",\n\t\"genre\": \"Thriller\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Author with Date of Death (application/vnd.marvin.authorwithdateofdeath.full+json)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.marvin.authordateofdeath.full+json"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"firstName\" : \"JD\",\n\t\"lastName\" : \"Salinger\",\n\t\"dateOfBirth\" : \"1919-01-01T00:00:00\",\n\t\"dateOfDeath\" : \"2010-01-17T00:00:00\",\n\t\"genre\": \"Drama\"\n}"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST Author with Date of Death (application/vnd.marvin.authorwithdateofdeath.full+xml)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/vnd.marvin.authordateofdeath.full+xml"
+					},
+					{
+						"key": "Accept",
+						"value": "application/xml"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "<AuthorCreateDateOfDeathVM xmlns:i=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns=\"http://schemas.datacontract.org/2004/07/Library.API.Models\">\n        <DateOfBirth xmlns:d3p1=\"http://schemas.datacontract.org/2004/07/System\">\n            <d3p1:DateTime>1919-01-01T00:00:00Z</d3p1:DateTime>\n            <d3p1:OffsetMinutes>0</d3p1:OffsetMinutes>\n        </DateOfBirth>\n        <DateOfDeath xmlns:d3p1=\"http://schemas.datacontract.org/2004/07/System\">\n            <d3p1:DateTime>2010-01-17T00:00:00Z</d3p1:DateTime>\n            <d3p1:OffsetMinutes>0</d3p1:OffsetMinutes>\n        </DateOfDeath>\n        <FirstName>JD</FirstName>\n        <Genre>Drama</Genre>\n        <LastName>Salinger</LastName>\n</AuthorCreateDateOfDeathVM>\n"
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -7,14 +7,14 @@ namespace Library.API.Helper
 {
     public static class CalculatedAge
     {
-        public static int GetCurrentAge(this DateTimeOffset dateTimeOffset)
+        public static int GetCurrentAge(this DateTimeOffset dateTimeOffset,DateTimeOffset? dateOfDeath)
         {
             var current = DateTimeOffset.UtcNow;
+            if (dateOfDeath != null)
+                current = dateOfDeath.Value.UtcDateTime;
             var age = current.Year - dateTimeOffset.Year;
             if (current < dateTimeOffset.AddYears(age))
-            {
                 age--;
-            }
             return age;
         }
     }
