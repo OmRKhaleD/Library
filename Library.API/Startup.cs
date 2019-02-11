@@ -60,6 +60,7 @@ namespace Library.API
             }).AddJsonOptions(opt=> {
                 opt.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             });
+            services.AddResponseCaching();
             services.AddDbContext<LibraryDbContext>(o => o.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             services.AddScoped<ILibraryRepository, LibraryRepository>();
 
@@ -73,6 +74,15 @@ namespace Library.API
 
             services.AddTransient<IPropertyMappingService, PropertyMappingService>();
             services.AddTransient<ITypeHelperService, TypeHelperService>();
+            services.AddHttpCacheHeaders(
+                (expirationModelOptionsAction)=> 
+            {
+                expirationModelOptionsAction.MaxAge = 600;
+            }, (validationModelOptionsAction) =>
+            {
+                validationModelOptionsAction.MustRevalidate = true;
+            }
+            );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -108,6 +118,8 @@ namespace Library.API
                 config.CreateMap<Entity.Author, Models.AuthorUpdateVM>();
 
             });
+            app.UseResponseCaching();
+            app.UseHttpCacheHeaders();
             app.UseMvc();
             //app.Run(async (context) =>
             //{
