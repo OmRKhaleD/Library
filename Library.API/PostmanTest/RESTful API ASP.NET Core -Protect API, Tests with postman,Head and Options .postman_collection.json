@@ -1,0 +1,201 @@
+{
+	"info": {
+		"_postman_id": "6313a86b-b663-4df3-84da-6582d384bb6b",
+		"name": "RESTful API ASP.NET Core - module 11",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET Authors",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Author",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Author (with tests)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7bfbcab7-a205-480a-8b99-35ea20c31eef",
+						"exec": [
+							"tests[\"Status code is 200\"] = responseCode.code === 200;",
+							" ",
+							"var jsonData = JSON.parse(responseBody);",
+							"var idMatches = jsonData.id === \"76053df4-6687-4353-8937-b45556748abe\";",
+							"",
+							"tests[\"Id matches returned id\"] = idMatches; "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors/76053df4-6687-4353-8937-b45556748abe",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors",
+						"76053df4-6687-4353-8937-b45556748abe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET Authors (with tests)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "7dfef589-68a9-436c-bbb9-6e661df51e73",
+						"exec": [
+							"tests[\"X-Pagination is present\"] = postman.getResponseHeader(\"X-Pagination\");"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Accept",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OPTIONS Authors",
+			"request": {
+				"method": "OPTIONS",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "https://localhost:44349/api/authors",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "HEAD Authors",
+			"request": {
+				"method": "HEAD",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "https://localhost:44349/api/authors",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "44349",
+					"path": [
+						"api",
+						"authors"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

@@ -32,6 +32,7 @@ namespace Library.API.Controllers
             typeHelperService = TypeHelperService;
         }
         [HttpGet(Name ="GetAuthors")]
+        [HttpHead]
         public IActionResult GetAuthors(AuthorResourceParams authorResourceParams,[FromHeader(Name ="Accept")] string mediaType)
         {
             if (!propertyMappingService.ValidMappingExistsFor<AuthorVM, Author>(authorResourceParams.OrderBy))
@@ -349,5 +350,12 @@ namespace Library.API.Controllers
                 links.Add(new LinkVM(CreateAuthorResourceUri(authorResourceParams, ResourceUriType.PreviousPage),"previousPage", "GET"));
             return links;
         }
+        [HttpOptions]
+        public IActionResult GetAuthorsOptions()
+        {
+            Response.Headers.Add("Allow", "Get,Options,Post");
+            return Ok();
+        }
     }
+
 }

@@ -175,5 +175,11 @@ namespace Library.API.Controllers
             booksWrapper.Links.Add(new LinkVM(urlHelper.Link("GetBooks", new { }),"self","GET"));
             return booksWrapper;
         }
+        [HttpOptions]
+        public IActionResult GetBooksOptions()
+        {
+            Response.Headers.Add("Allow", "Get,Options,Post");
+            return Ok();
+        }
     }
 }

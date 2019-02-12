@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Newtonsoft.Json.Serialization;
+using AspNetCoreRateLimit;
 
 namespace Library.API
 {
@@ -75,14 +76,39 @@ namespace Library.API
             services.AddTransient<IPropertyMappingService, PropertyMappingService>();
             services.AddTransient<ITypeHelperService, TypeHelperService>();
             services.AddHttpCacheHeaders(
-                (expirationModelOptionsAction)=> 
+                expOpt=> 
             {
-                expirationModelOptionsAction.MaxAge = 600;
-            }, (validationModelOptionsAction) =>
+                expOpt.MaxAge = 600;
+            }, valOpt =>
             {
-                validationModelOptionsAction.MustRevalidate = true;
+                valOpt.MustRevalidate = true;
             }
             );
+
+            services.AddMemoryCache();
+
+            services.Configure<IpRateLimitOptions>(opt =>
+            {
+                opt.GeneralRules = new System.Collections.Generic.List<RateLimitRule>()
+                {
+                    //limit requests to full api to 3 requests per 5 minutes
+                    new RateLimitRule()
+                    {
+                        Endpoint = "*",
+                        Limit = 10,
+                        Period = "5m"
+                    },
+                    //limit requests to full api to 3 requests per 10 secondes
+                    new RateLimitRule()
+                    {
+                        Endpoint = "*",
+                        Limit = 3,
+                        Period = "10s"
+                    }
+                };
+            });
+            services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+            services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -118,6 +144,7 @@ namespace Library.API
                 config.CreateMap<Entity.Author, Models.AuthorUpdateVM>();
 
             });
+            app.UseIpRateLimiting();
             app.UseResponseCaching();
             app.UseHttpCacheHeaders();
             app.UseMvc();
